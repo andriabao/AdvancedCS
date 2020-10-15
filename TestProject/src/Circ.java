@@ -21,7 +21,7 @@ public class Circ extends Shape {
 
 	@Override
 	public boolean isOn(int x, int y) {
-		// TODO Auto-generated method stub
+		if((int)(Math.pow(x-(this.x+width/2),2))+(int)(Math.pow(y-(this.y+width/2), 2)) < (int)(Math.pow(width/2,2))) return true;
 		return false;
 	}
 

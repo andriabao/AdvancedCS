@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -38,6 +39,7 @@ public class GraphicsEditor {
 				
 		JButton circButton = new JButton("Circle");
 		JButton rectButton = new JButton("Rectangle");
+		JButton delButton = new JButton("Delete");
 		
 		JPanel innerPanel = new JPanel();
 		innerPanel.setPreferredSize(new Dimension(WIDTH, 50));
@@ -45,6 +47,7 @@ public class GraphicsEditor {
 		
 		innerPanel.add(circButton);
 		innerPanel.add(rectButton);
+		innerPanel.add(delButton);
 		panel.add(innerPanel);
 		panel.add(paint);
 		
@@ -64,6 +67,13 @@ public class GraphicsEditor {
 			
 			public void actionPerformed(ActionEvent e) {
 				mode = 2;
+			}
+		});
+		
+		delButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				mode = 3;
 			}
 		});
 		
@@ -89,17 +99,42 @@ public class GraphicsEditor {
 				if(mode == 1) {
 					drawList.add(new Circ(e.getX(), e.getY(), 
 							100, 100, Color.BLUE));
-					panel.repaint();
 				}
 				if(mode == 2) {
 					drawList.add(new Rect(e.getX(), e.getY(), 
 							100, 100, Color.RED));
-					panel.repaint();
 				}
+				if(mode == 3) {
+					for(int i = 0; i < drawList.size(); i++) {
+						if(drawList.get(i).isOn(e.getX(),e.getY())) {
+							drawList.remove(i);
+							break;
+						}
+					}
+				}
+				
+				panel.repaint();
 				
 			}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
+		});
+		
+		
+		paint.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 		
 	}

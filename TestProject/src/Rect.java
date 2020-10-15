@@ -21,7 +21,9 @@ public class Rect extends Shape {
 
 	@Override
 	public boolean isOn(int x, int y) {
-		// TODO Auto-generated method stub
+		if(x<this.x+width && x>this.x && y<this.y+height && y>this.y) {
+			return true;
+		}
 		return false;
 	}
 
