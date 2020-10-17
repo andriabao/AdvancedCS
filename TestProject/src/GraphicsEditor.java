@@ -39,16 +39,19 @@ public class GraphicsEditor {
 				
 		JButton circButton = new JButton("Circle");
 		JButton rectButton = new JButton("Rectangle");
+		JButton lineButton = new JButton("Line");
 		JButton delButton = new JButton("Delete");
 		
-		JPanel innerPanel = new JPanel();
-		innerPanel.setPreferredSize(new Dimension(WIDTH, 50));
+		
+		JPanel ButtonPanel = new JPanel();
+		ButtonPanel.setPreferredSize(new Dimension(WIDTH, 50));
 		paint.setPreferredSize(new Dimension(WIDTH, 500));
 		
-		innerPanel.add(circButton);
-		innerPanel.add(rectButton);
-		innerPanel.add(delButton);
-		panel.add(innerPanel);
+		ButtonPanel.add(circButton);
+		ButtonPanel.add(rectButton);
+		ButtonPanel.add(lineButton);
+		ButtonPanel.add(delButton);
+		panel.add(ButtonPanel);
 		panel.add(paint);
 		
 		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -70,10 +73,17 @@ public class GraphicsEditor {
 			}
 		});
 		
-		delButton.addActionListener(new ActionListener() {
+		lineButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				mode = 3;
+			}
+		});
+		
+		delButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				mode = 4;
 			}
 		});
 		
@@ -92,19 +102,28 @@ public class GraphicsEditor {
 		
 		paint.addMouseListener(new MouseListener() {
 			
-			public void mousePressed(MouseEvent e) {}
-			
-			public void mouseReleased(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				if(mode == 1) {
 					drawList.add(new Circ(e.getX(), e.getY(), 
-							100, 100, Color.BLUE));
+							0, 0, Color.BLUE));
 				}
 				if(mode == 2) {
 					drawList.add(new Rect(e.getX(), e.getY(), 
-							100, 100, Color.RED));
+							0, 0, Color.RED));
 				}
 				if(mode == 3) {
+					drawList.add(new Line(e.getX(), e.getY(), 0, 0, Color.GREEN));
+				}
+				
+				panel.repaint();
+			}
+			
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {
+				if(mode == 3) {
+					drawList.add(new Line(e.getX(), e.getY(), 100, 100, Color.GREEN));
+				}
+				if(mode == 4) {
 					for(int i = 0; i < drawList.size(); i++) {
 						if(drawList.get(i).isOn(e.getX(),e.getY())) {
 							drawList.remove(i);
@@ -125,8 +144,16 @@ public class GraphicsEditor {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				if(mode == 1) {
+					drawList.get(drawList.size()-1).resize(e.getX(), e.getY(), e.getX(), e.getY());
+				}
+				if(mode == 2) {
+					drawList.get(drawList.size()-1).resize(e.getX(),e.getY(),e.getX(),e.getY());
+				}
+				if(mode == 3) {
+					drawList.get(drawList.size()-1).resize(e.getX(),e.getY(),e.getX(),e.getY());
+				}
+				panel.repaint();
 			}
 
 			@Override

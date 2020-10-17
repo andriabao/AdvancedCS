@@ -29,8 +29,8 @@ public class Rect extends Shape {
 
 	@Override
 	public void resize(int x1, int y1, int x2, int y2) {
-		// TODO Auto-generated method stub
-		
+		width = x2-x;
+		height = y2-y;
 	}
 
 }

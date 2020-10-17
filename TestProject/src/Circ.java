@@ -16,19 +16,19 @@ public class Circ extends Shape {
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(c);
-		g.fillOval(x, y, width, height);
+		g.fillOval(x-width/2, y-height/2, width, height);
 	}
 
 	@Override
 	public boolean isOn(int x, int y) {
-		if((int)(Math.pow(x-(this.x+width/2),2))+(int)(Math.pow(y-(this.y+width/2), 2)) < (int)(Math.pow(width/2,2))) return true;
+		if((int)(Math.pow(x-(this.x),2))+(int)(Math.pow(y-(this.y), 2)) < (int)(Math.pow(width/2,2))) return true;
 		return false;
 	}
 
 	@Override
 	public void resize(int x1, int y1, int x2, int y2) {
-		// TODO Auto-generated method stub
-		
+		width = 2*(int) Math.sqrt(Math.pow(x2-x,2)+Math.pow(y2-y, 2));
+		height = width;
 	}
 
 }
