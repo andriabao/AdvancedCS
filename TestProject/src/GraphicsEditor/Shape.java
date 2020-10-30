@@ -8,7 +8,6 @@ public abstract class Shape {
 
 	protected int x, y, width, height;
 	protected Color c;
-	protected String type;
 		
 	public Shape(int x,int y, int w, int h, Color c) {
 		this.x = x; this.y = y;

@@ -1,20 +1,26 @@
 package GraphicsEditor;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 public class Text extends Shape {
-			
-	public Text(int x, int y, int w, int h, Color c) {
+	
+	JTextArea area;
+	int textS;
+	
+	public Text(int x, int y, int w, int h, int textSize, Color c) {
 		super(x, y, w, h, c);
-		// TODO Auto-generated constructor stub
+		textS = textSize;
 	}
 
 	@Override
 	public Shape copy() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -31,7 +37,7 @@ public class Text extends Shape {
 		}
 		return false;
 	}
-
+	
 	@Override
 	public void resize(int x1, int y1, int x2, int y2) {
 		
@@ -39,15 +45,33 @@ public class Text extends Shape {
 		height = Math.abs(y2-y1);
 		x = Math.min(x1, x2);
 		y = Math.min(y1, y2);
-		
+			
 	}
 	
-	public JTextArea textBox() {
-		JTextArea area = new JTextArea(" Click to edit text");
+	public void createText(JPanel panel) {
+		area = new JTextArea(" Double click in delete mode to delete the text box");
 		area.setEditable(true);
 		area.setFocusable(true);
-		area.setBounds(x+6, y+89, width-1, height-1);
-		return area;
+		area.setSize(width-1, height-1);
+		area.setLocation(x+1, y+1);
+		area.setFont(new Font("Verdana", Font.PLAIN, textS));
+		panel.add(area);
+		
+		area.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(GraphicsEditor.mode == 4) {
+					panel.remove(area);
+				}
+			}
+
+			public void mousePressed(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			
+		});
 	}
 
 }

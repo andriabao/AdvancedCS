@@ -15,7 +15,6 @@ public class Line extends Shape {
 
 	@Override
 	public Shape copy() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -29,7 +28,15 @@ public class Line extends Shape {
 
 	@Override
 	public boolean isOn(int x, int y) {
-		// TODO Auto-generated method stub
+		if(width != 0) {
+			if((height/width)*(this.x-x) > (this.y-y)-lineW && (height/width)*(this.x-x) < (this.y-y)+lineW) {
+				return true;
+			}
+		} else {
+			if(x > this.x - lineW && this.x < this.x + lineW && y < this.y + height && y >this.y) {
+				return true;
+			}
+		}
 		return false;
 	}
 
