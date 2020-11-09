@@ -158,7 +158,6 @@ public class GraphicsEditor {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
-		frame.setVisible(true);
 		frame.add(panel);
 		panel.setFocusable(true);		
 		
@@ -340,6 +339,7 @@ public class GraphicsEditor {
 			
 		});
 		
+		frame.setVisible(true);
 		
 	}
 	
