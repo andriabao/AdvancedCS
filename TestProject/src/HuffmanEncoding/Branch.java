@@ -1,3 +1,4 @@
+package HuffmanEncoding;
 
 public class Branch {
 	

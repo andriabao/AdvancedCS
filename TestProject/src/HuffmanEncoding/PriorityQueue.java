@@ -1,3 +1,4 @@
+package HuffmanEncoding;
 import java.util.ArrayList;
 
 public class PriorityQueue<E> {
