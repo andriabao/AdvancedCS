@@ -42,25 +42,5 @@ public class PriorityQueue<E> {
 	public Branch getBranch(int i) {
 		return queue.get(i);
 	}
-	
-	public void print() {
-		for(Branch i : queue) {
-			System.out.print(i.priority);
-			System.out.print(i.info);
-			System.out.println();
-		}
-	}
-	
-	public void printBranch(Branch head, int level) {
-		
-		if(head.isLeaf) { //prints a bit weirdly, but it works (level shows what level of the tree it is on)
-			System.out.println(head.info + " " + level);
-		} else {
-			System.out.println(head.info + " " + level);
-			printBranch(head.child1, level + 1);
-			printBranch(head.child2, level + 1);
-		}
-		
-	}
 
 }
