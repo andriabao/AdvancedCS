@@ -81,7 +81,7 @@ public class KevinBaconGame {
 		outerPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		panel.setPreferredSize(new Dimension(innerW, innerH));
 		actorPanel.setPreferredSize(new Dimension(innerW, BUTTONH));
-		outputPanel.setPreferredSize(new Dimension(innerW, HEIGHT-2*BUTTONH));
+		outputPanel.setPreferredSize(new Dimension(innerW, innerH-BUTTONH));
 		buttonPanel.setPreferredSize(new Dimension(innerW, (int) (BUTTONH)));
 		a1Text.setPreferredSize(new Dimension(INPUTW,INPUTH));
 		a2Text.setPreferredSize(new Dimension(INPUTW,INPUTH));
@@ -100,7 +100,7 @@ public class KevinBaconGame {
 		//scrollbar for output text
 		JScrollPane scroll = new JScrollPane (outputPanel);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setPreferredSize(new Dimension(innerW-SIDEB*3,HEIGHT-2*BUTTONH));	
+		scroll.setPreferredSize(new Dimension(innerW-SIDEB*3,innerH-2*BUTTONH));	
 		
 		//formatting/layout for containers
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -169,21 +169,24 @@ public class KevinBaconGame {
 		
 		HashMap<String, String> sActors = simplify(actors); //hashmap mapping simplified actor names to actor names
 		
-		pathButton.addActionListener(new ActionListener() {
+		pathButton.addActionListener(new ActionListener() { //mouse listener for finding the shortest path
 
 			public void actionPerformed(ActionEvent e) {
-
+				
+				//simplifies actor names
 				String actor1 = a1Text.getText().replaceAll(" ", "").toLowerCase();
 				String actor2 = a2Text.getText().replaceAll(" ", "").toLowerCase();
 								
+				//error checking
 				if(!sActors.containsKey(actor1)) {
 					outputPanel.setText(" \n Please make sure there is a valid input for actor 1 \n");
 				} else if (!sActors.containsKey(actor2)) {
 					outputPanel.setText(" \n Please make sure there is a valid input for actor 2 \n");
 				} else {
 										
-					ArrayList<Object> path = g.BFS(sActors.get(actor1), sActors.get(actor2));
+					ArrayList<Object> path = g.BFS(sActors.get(actor1), sActors.get(actor2)); //bfs for shortest path
 					
+					//output
 					outputPanel.setText(" \n The shortest path length between these two actors is " + path.size()/2 + ": \n");
 					
 					for(int i = 0; i < path.size(); i+=2) {
@@ -199,7 +202,7 @@ public class KevinBaconGame {
 			
 		});
 		
-		mutualButton.addActionListener(new ActionListener() {
+		mutualButton.addActionListener(new ActionListener() { //mouse listener for mutual actor button
 
 			public void actionPerformed(ActionEvent e) {
 				String actor1 = a1Text.getText().replaceAll(" ", "").toLowerCase();
@@ -228,40 +231,84 @@ public class KevinBaconGame {
 			
 		});
 		
-		avgButton.addActionListener(new ActionListener() {
+		avgButton.addActionListener(new ActionListener() { //mouse listener for average connectivity button
 
 			public void actionPerformed(ActionEvent e) {
 				String actor1 = a1Text.getText().replaceAll(" ", "").toLowerCase();
 				String actor2 = a2Text.getText().replaceAll(" ", "").toLowerCase();
 				
-				totalDist = 0;
+				totalDist = 0; //resets value of total distance
 								
-				if(!sActors.containsKey(actor1)) {
-					outputPanel.setText("Please make sure there is a valid input for actor 1 \n");
+				if(!sActors.containsKey(actor1) && !sActors.containsKey(actor2)) { //allows program to work unless both inputs are invalid
+					outputPanel.setText(" \n Please make sure there is a valid input \n");
 				} else if (!sActors.containsKey(actor2)) {
-					outputPanel.setText("Please make sure there is a valid input for actor 2 \n");
-				} else {
 					
-					String[] options1 = {sActors.get(actor1), sActors.get(actor2)};
-					int chooser1 = JOptionPane.showOptionDialog(outerPanel, "Choose which actor to find the connectivity of", "Choose an actor", 
-							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options1, options1[0]);
+					//confirmation message
+					String[] options = {"Yes", "No"};
+					int chooser = JOptionPane.showOptionDialog(outerPanel, "Do you want to find connectivity for actor 1?", null, 
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 					
-					while(chooser1 != 0 && chooser1 != 1) {
-						chooser1 = JOptionPane.showOptionDialog(outerPanel, "Choose an option", "Please choose an actor", 
-								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options1, options1[0]);
+					if(chooser == 0) {
+						HashMap<Object, Integer> connections = g.connectivity(sActors.get(actor1));					
+						
+						connections.forEach((k,v) -> totalDist= totalDist + v);
+						
+						//rounding number for average
+						double numActors = sActors.size();
+						double avgC = totalDist/numActors;
+						DecimalFormat df = new DecimalFormat("#.###");
+						
+						System.out.println(avgC);
+						
+						outputPanel.setText("\n " + sActors.get(actor1) + " has an average connectivity of: " + df.format(avgC) + "\n");
 					}
 					
-					HashMap<Object, Integer> connections = g.connectivity(options1[chooser1]);					
+				} else if (!sActors.containsKey(actor1)) {
+					
+					//confirmation message
+					String[] options = {"Yes", "No"};
+					int chooser = JOptionPane.showOptionDialog(outerPanel, "Do you want to find connectivity for actor 2?", null, 
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					
+					if(chooser == 0) {
+						HashMap<Object, Integer> connections = g.connectivity(sActors.get(actor2));					
+						
+						connections.forEach((k,v) -> totalDist= totalDist + v);
+						
+						//rounding number for average
+						double numActors = sActors.size();
+						double avgC = totalDist/numActors;
+						DecimalFormat df = new DecimalFormat("#.###");
+						
+						System.out.println(avgC);
+						
+						outputPanel.setText("\n " + sActors.get(actor2) + " has an average connectivity of: " + df.format(avgC) + "\n");
+					}
+					
+				} else {
+					
+					//choosing which actor to find connectivity out of both
+					String[] options = {sActors.get(actor1), sActors.get(actor2)};
+					int chooser = JOptionPane.showOptionDialog(outerPanel, "Choose which actor to find the connectivity of", "Choose an actor", 
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					
+					while(chooser != 0 && chooser != 1) {
+						chooser = JOptionPane.showOptionDialog(outerPanel, "Choose an option", "Please choose an actor", 
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					}
+					
+					HashMap<Object, Integer> connections = g.connectivity(options[chooser]);					
 										
 					connections.forEach((k,v) -> totalDist= totalDist + v);
 					
+					//rounding number for average
 					double numActors = sActors.size();
 					double avgC = totalDist/numActors;
 					DecimalFormat df = new DecimalFormat("#.###");
 					
 					System.out.println(avgC);
 					
-					outputPanel.setText("\n " + options1[chooser1] + " has an average connectivity of: " + df.format(avgC) + "\n");
+					outputPanel.setText("\n " + options[chooser] + " has an average connectivity of: " + df.format(avgC) + "\n");
 					
 				}
 				
