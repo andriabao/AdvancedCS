@@ -10,5 +10,9 @@ public class Node<E> {
 		info = i;
 	}
 	
+	public String toString() {
+		return priority + " " + info;
+	}
+	
 
 }
